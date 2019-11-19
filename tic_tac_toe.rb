@@ -8,33 +8,36 @@ class Players
   end
   
   
-  def choice(player)
 
-    spot_list = ["1: Top-Left", "2: Top-Center", "3: Top-Right", "3: Center-Left", "4: Center", "5: Center-Right", "6: Bottom-Left", "7: Bottom-Center", "8: Bottom-Right"]
+  def choice
 
-    puts "#{player.name}, please select a spot: (1-9)"
-    9.times {|i| puts spot_list[i]}
-    player_input = gets.chomp
+    valid_input = true
 
-    if player_input =~ /^-?[0-9]+$/
-      puts "Valid input"
-    else
-      puts "Invalid input."
+    while valid_input
+
+      puts "#{@name}, please select a spot: (1-9)\n\n"
+      puts " 1 | 2 | 3 \n 4 | 5 | 6 \n 7 | 8 | 9\n"
+      
+      player_input = gets.chomp
+
+      if player_input =~ /^-?[1-9]+$/
+        puts "Great choice!\n"
+        break
+      else
+        puts "Invalid input. Try again!\n\n"
+      end
+
     end
 
-    player_input
+    player_input.to_i
 
   end
   
   
-    def winner(player)
-    end
-  
 end
   
-
-
 class Game
+
   attr_accessor :game_num, :turn
   @@games_played = 0
   
@@ -50,23 +53,13 @@ class Game
     @@games_played +=1
   end
   
-  def show_board
-  end
   
     
   def loop
     true  
   end
-  
-  
-  def win
-  end
-  
-  def start
-  end
 
-  
-  def over(winner)
+  def over
     
     puts "Game Over!  #{player_winner} won!  Thanks for playing!"
     false
@@ -75,69 +68,123 @@ class Game
     
 end
 
+class Boards
+  attr_accessor :board
 
+  def initialize(board = [])
+    @board = [Spot.new, Spot.new, Spot.new, Spot.new, Spot.new, Spot.new, Spot.new, Spot.new, Spot.new]
+    
+  end
+
+  def show
+    puts "\n#{@board[0].symbol}|#{@board[1].symbol}|#{@board[2].symbol}\n#{@board[3].symbol}|#{@board[4].symbol}|#{@board[5].symbol}\n#{@board[6].symbol}|#{@board[7].symbol}|#{@board[8].symbol}\n\n"
+  end
+
+
+  def win(choice)
+    if ((@board[0].state == true) && (@board[1].state == true) && (@board[2].state == true)) && ((@board[0].symbol == choice) && (@board[1].symbol == choice) && (@board[2].symbol == choice))
+        puts "you won!!!!"
+        exit!
+    elsif ((@board[3].state == true) && (@board[4].state == true) && (@board[5].state == true)) && ((@board[3].symbol == choice) && (@board[4].symbol == choice) && (@board[5].symbol == choice))
+        puts "you won!!!!"
+        exit!
+    elsif ((@board[6].state == true) && (@board[7].state == true) && (@board[8].state == true)) && ((@board[6].symbol == choice) && (@board[7].symbol == choice) && (@board[8].symbol == choice))
+          puts "you won!!!!"
+          exit!
+    elsif ((@board[0].state == true) && (@board[3].state == true) && (@board[6].state == true)) && ( (@board[0].symbol == choice) && (@board[3].symbol == choice) && (@board[6].symbol == choice))
+        puts "you won!!!!"
+        exit!
+      
+    elsif ((@board[1].state == true) && (@board[4].state == true) && (@board[7].state == true)) && ((@board[1].symbol == choice) && (@board[4].symbol == choice) && (@board[7].symbol == choice))
+        puts "you won!!!!"
+        exit!
+    elsif ((@board[2].state == true) && (@board[5].state == true) && (@board[8].state == true)) && ((@board[2].symbol == choice) && (@board[5].symbol == choice) && (@board[8].symbol == choice))
+        puts "you won!!!!"
+        exit!
+    elsif ((@board[0].state == true) && (@board[4].state == true) && (@board[8].state == true)) && ((@board[0].symbol == choice) && (@board[4].symbol == choice) && (@board[8].symbol == choice))
+        puts "you won!!!!"
+        exit!
+    elsif ((@board[2].state == true) && (@board[4].state == true) && (@board[6].state == true)) && ((@board[2].symbol == choice) && (@board[4].symbol == choice) && (@board[6].symbol == choice))
+        puts "you won!!!!"
+        exit!
+    end
+  end
+end
+
+
+class Spot
+    
+  attr_accessor :state, :symbol
   
-class GameSpot
-    spot = {}
-  
-    attr_accessor :number, :state, :symbol
-  
-    def initialize(number,state=false,symbol=nil)
-          
-      @number = number
+    def initialize(state=false,symbol=" ")
+    
       @state = state
       @symbol = symbol
     
     end
-  if 1&&2&&3 || 4&&5&&6 || 7&&8&&9
-  elsif 1&&4&&7 etc.
 
-    multi-dimensional array.
-
-    array = [["x", "o", "x"],
-             ["x", "o", "x"],
-             ["x", "o", "x"]]
 end
 
 
-  
-  
 game = Game.new
 
-spot_1 = GameSpot.new(1)
-spot_2 = GameSpot.new(2)
-spot_3 = GameSpot.new(3)
-spot_4 = GameSpot.new(4)
-spot_5 = GameSpot.new(5)
-spot_6 = GameSpot.new(6)
-spot_7 = GameSpot.new(7)
-spot_8 = GameSpot.new(8)
-spot_9 = GameSpot.new(9)
+game_board = Boards.new
 
-puts "What is player 1's name?:"
+
+puts "What is player 1's name?:\n"
 name = gets.chomp.capitalize
-player1 = Player.new(name, "X's")
+player1 = Players.new(name, "X")
 
-puts "What is player 2's name?:"
+puts "What is player 2's name?:\n"
 name = gets.chomp.capitalize
-player2 = Player.new(name, "O's")
+player2 = Players.new(name, "O")
 
 
-puts "#{player1.name}(#{player1.symbol}) & #{player2.name}(#{player2.symbol}) have joined the arena!"
+puts "#{player1.name}(#{player1.symbol}) & #{player2.name}(#{player2.symbol}) have joined the arena!\n\n"
 
 
-game.start
+while game.loop
 
-while !game.over
-  while game.loop
-    choice = player1.choice
-    game.show_board
-    game.win
-    player2.choice
-    game.show_board
-    game.win
+current_player = player1
+
+player_choice = current_player.choice - 1
+  while game_board.board[player_choice].state
+    puts "\nThat spot is already taken!  Try again\n\n"
+    player_choice = current_player.choice - 1
   end
+
+game_board.board[player_choice].symbol = current_player.symbol
+game_board.board[player_choice].state = true
+
+game_board.show
+
+game_board.win(game_board.board[player_choice].symbol)
+
+
+current_player = player2
+
+player_choice = current_player.choice - 1
+  while game_board.board[player_choice].state
+    puts "\nThat spot is already taken!  Try again!\n\n"
+    player_choice = current_player.choice - 1
+  end
+
+game_board.board[player_choice].symbol = current_player.symbol
+game_board.board[player_choice].state = true
+
+game_board.show
+game_board.win(game_board.board[player_choice].symbol)
+
+
 end
-   
-  
-  
+
+# while !game.over
+#   while game.loop
+#     choice = player1.choice
+#     game.show_board
+#     game.win
+#     player2.choice
+#     game.show_board
+#     game.win
+#   end
+# end
